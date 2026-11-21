@@ -34,3 +34,13 @@ Support desk. Decision records: whoever signed them.
 ---
 
 Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
+
+## In this repo
+
+The kb export above, plus what was found in ticket #4471 (MEGA.dev Challenge S01E03):
+
+- Issues #1, #2 and #3: one per problem in #4471, each with how many reports it covers.
+- The page: `src/routes/kb/incidents/4471/split/+page.svx`, its counts from `src/lib/kb/ProblemTable.svelte` and `src/lib/kb/problems.ts`.
+- The page as the desk will see it: `rendered/kb-incidents-4471-split.html`.
+
+Build it again with `npm install && npm run build`; the pages land in `build/`.

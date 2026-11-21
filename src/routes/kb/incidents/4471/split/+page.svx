@@ -1,0 +1,52 @@
+---
+layout: runbook
+title: '#4471 · what the reports show'
+owner: support desk
+status: proposed
+reviewed: 2026-11-21
+signature: Piotr Leszczynski
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/piotr-leszczynski/mega-s01e03-what-it-shows';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Read by tenant and by what
+the reports say, not by subject line, it holds more than one problem. The queued parser fix
+closes only the first.
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} {repo} issues={{ parser: 1, hint: 2, 'one-day move': 3 }} />
+
+## The problems
+
+- **`parser`: the shared parser flips day and month** ([#1]({repo}/issues/1)). It reads every
+  date month first, and our tenants write the day first. Booked 7 April, the invite says 4 July.
+  Every tenant, through the app, email and the booking-v2 form. This is the fix that is queued.
+- **`hint`: the booking-v3 form asks for the month first** ([#2]({repo}/issues/2)). It prints
+  `MM/DD/YYYY` under its date field; people type what it says, and the form reads the date the
+  tenant's way, day first. The same flip, a different bug: only reports sent through the v3 form,
+  and the parser fix does not touch it.
+- **`one-day move`: dates move by one day** ([#3]({repo}/issues/3)). Not a flip. The same meeting
+  shows on Tuesday in Lisbon and on Monday in Toronto; an invite arrives before the booking was
+  made; "every booking in June is one day off". The desk already read these as a one-day move and
+  counted them under `parser` by tenant. They need their own fix, most likely in how invite times
+  are converted between time zones.
+
+## Why it was one ticket
+
+Duplicates are merged on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), and
+subject lines don't tell these problems apart: "Date is wrong" and "Month and day swapped?" come in
+under every one of them. The subject says the date is wrong; only the body and the tenant say why.
+Intake tags are a browser guess; counts here are by tenant.
+
+<Callout kind="warn">
+Shipping the parser fix and closing #4471 leaves #2 and #3 open.
+</Callout>
+
+<RenderStamp {signature} />
