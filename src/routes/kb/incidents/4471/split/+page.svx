@@ -4,7 +4,7 @@ title: '#4471 · what the reports show'
 owner: support desk
 status: proposed
 reviewed: 2026-11-21
-signature: Piotr Leszczynski
+signature: v1.eyJzdWIiOiIxOTA0IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTUyOTgyMjgsImV4cCI6MTc5NTM4NDYyOH0.bEg5foydzVRQop_Y7HvNkwm2nUQ2DKsEwh6L5Ak7O8g
 ---
 
 <script>
