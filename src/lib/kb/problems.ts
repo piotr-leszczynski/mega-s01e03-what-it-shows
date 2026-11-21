@@ -1,6 +1,7 @@
-// What a big ticket holds, problem by problem. causes.ts says which cause a report belongs to;
-// this file also takes out the reports the desk read as a one-day move (desk-notes.json), because
-// a date that moves by one day is not a flipped date, whatever the tenant.
+// What a big ticket holds, problem by problem. causes.ts says which cause a report belongs to,
+// and the desk counts every report there, where it is filed. The reports the desk read as a
+// one-day move (desk-notes.json) are a problem of their own too: a date that moves by one day is
+// not a flipped date. They get their own row and stay counted where they are filed.
 import { groupByCause, uniqueById, type Report, type Tenant } from '#lib/kb/causes';
 
 export type Problem = 'parser' | 'hint' | 'one-day move' | 'unplaced';
@@ -41,9 +42,19 @@ export function problemsOf(
   tenantOf: (r: Report) => Tenant | undefined,
   oneDayMove: readonly string[],
 ): ProblemRow[] {
+  const rows = groupByCause(merged, tenantOf).map((g) => row(g.cause, g.reports));
   const moved = merged.filter((r) => oneDayMove.includes(r.id));
-  const flipped = merged.filter((r) => !oneDayMove.includes(r.id));
-  const rows = groupByCause(flipped, tenantOf).map((g) => row(g.cause, g.reports));
   if (moved.length) rows.push(row('one-day move', moved));
   return rows.sort((a, b) => b.reports.length - a.reports.length);
+}
+
+// Reports in `p` that are also counted in another row.
+export function alsoIn(p: ProblemRow, rows: ProblemRow[]): Record<string, number> {
+  const ids = new Set(p.reports.map((r) => r.id));
+  return Object.fromEntries(
+    rows
+      .filter((o) => o !== p)
+      .map((o) => [o.problem, o.reports.filter((r) => ids.has(r.id)).length] as const)
+      .filter(([, n]) => n > 0),
+  );
 }
